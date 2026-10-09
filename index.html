@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+minimum-scale=1,
+user-scalable=no,
+viewport-fit=cover">
+
+<title>BACKROOMS - Biciciademmm</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    touch-action:none;
+    font-family:Arial,sans-serif;
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:100%;
+}
+
+/* =========================
+   BAŞLANGIÇ
+========================= */
+
+#startScreen{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#090806;
+    color:white;
+}
+
+.startBox{
+    width:min(90%,500px);
+    padding:35px;
+    text-align:center;
+    background:#151208;
+    border:1px solid #b59643;
+}
+
+.startBox h1{
+    color:#d9b84e;
+    letter-spacing:5px;
+}
+
+.startBox p{
+    color:#bbb;
+    line-height:1.6;
+}
+
+#startButton{
+    padding:16px 35px;
+    margin-top:20px;
+    background:#181308;
+    color:#e6c85d;
+    border:1px solid #d4b34e;
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* =========================
+   DİKEY TELEFON
+========================= */
+
+#rotateScreen{
+    position:fixed;
+    inset:0;
+    z-index:3000;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:#050505;
+    color:white;
+}
+
+.rotateBox{
+    padding:30px;
+}
+
+.rotateIcon{
+    font-size:70px;
+}
+
+.rotateBox h2{
+    color:#e0c25b;
+}
+
+/* =========================
+   HUD
+========================= */
+
+#hud{
+    position:fixed;
+    top:12px;
+    left:12px;
+    width:220px;
+    z-index:100;
+    color:white;
+    pointer-events:none;
+    text-shadow:0 2px 5px #000;
+}
+
+.barName{
+    font-size:11px;
+    margin-top:5px;
+}
+
+.bar{
+    width:100%;
+    height:9px;
+    background:#222;
+    border:1px solid #555;
+}
+
+.barFill{
+    height:100%;
+    width:100%;
+}
+
+#healthBar{
+    background:#c33;
+}
+
+#staminaBar{
+    background:#ddd;
+}
+
+#batteryBar{
+    background:#d5bd3e;
+}
+
+#levelText{
+    margin-top:8px;
+    color:#e1c45c;
+    font-weight:bold;
+}
+
+#message{
+    position:fixed;
+    top:15%;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:150;
+    color:white;
+    font-size:21px;
+    font-weight:bold;
+    text-align:center;
+    text-shadow:0 3px 8px #000;
+    pointer-events:none;
+}
+
+/* =========================
+   CROSSHAIR
+========================= */
+
+#crosshair{
+    position:fixed;
+    z-index:90;
+    left:50%;
+    top:50%;
+    width:5px;
+    height:5px;
+    margin:-2.5px;
+    background:white;
+    border-radius:50%;
+    pointer-events:none;
+}
+
+/* =========================================================
+   MOBİL KONTROLLER
+========================================================= */
+
+#mobileControls{
+    position:fixed;
+    inset:0;
+    z-index:500;
+    display:none;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+/* =========================
+   KAMERA ALANI
+========================= */
+
+#cameraZone{
+    position:absolute;
+
+    left:25%;
+    top:0;
+
+    width:45%;
+    height:78%;
+
+    pointer-events:auto;
+    touch-action:none;
+
+    background:transparent;
+}
+
+/* =========================
+   JOYSTICK
+========================= */
+
+#joystick{
+    position:absolute;
+
+    left:22px;
+    bottom:22px;
+
+    width:145px;
+    height:145px;
+
+    border-radius:50%;
+
+    background:rgba(50,50,50,.48);
+    border:2px solid rgba(255,255,255,.55);
+
+    pointer-events:auto;
+    touch-action:none;
+}
+
+#joystickRing{
+    position:absolute;
+    inset:18px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(255,255,255,.2);
+}
+
+#joystickKnob{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    width:65px;
+    height:65px;
+
+    margin-left:-32.5px;
+    margin-top:-32.5px;
+
+    border-radius:50%;
+
+    background:rgba(220,220,220,.75);
+    border:2px solid white;
+
+    pointer-events:none;
+}
+
+/* =========================
+   SAĞ BUTONLAR
+========================= */
+
+.mobileButton{
+    position:absolute;
+
+    width:72px;
+    height:58px;
+
+    border-radius:14px;
+
+    background:rgba(10,10,10,.78);
+    border:2px solid rgba(255,255,255,.45);
+
+    color:white;
+
+    font-size:12px;
+    font-weight:bold;
+
+    pointer-events:auto;
+    touch-action:none;
+
+    z-index:20;
+}
+
+.mobileButton:active{
+    background:rgba(150,120,35,.9);
+    transform:scale(.94);
+}
+
+/* KOŞ */
+
+#runButton{
+    right:15px;
+    bottom:18px;
+
+    width:82px;
+    height:68px;
+}
+
+/* FENER */
+
+#flashButton{
+    right:112px;
+    bottom:18px;
+}
+
+/* ETKİLEŞ */
+
+#interactButton{
+    right:112px;
+    bottom:87px;
+}
+
+/* NOT */
+
+#noteButton{
+    right:15px;
+    bottom:91px;
+}
+
+/* SES */
+
+#soundButton{
+    right:15px;
+    bottom:164px;
+}
+
+/* SOL KAMERA */
+
+#leftButton{
+    right:112px;
+    bottom:164px;
+
+    width:54px;
+}
+
+/* SAĞ KAMERA */
+
+#rightButton{
+    right:51px;
+    bottom:164px;
+
+    width:54px;
+}
+
+/* =========================
+   KÜÇÜK TELEFON
+========================= */
+
+@media(max-height:430px){
+
+    #joystick{
+        width:120px;
+        height:120px;
+        left:14px;
+        bottom:14px;
+    }
+
+    #joystickRing{
+        inset:15px;
+    }
+
+    #joystickKnob{
+        width:54px;
+        height:54px;
+        margin-left:-27px;
+        margin-top:-27px;
+    }
+
+    .mobileButton{
+        width:61px;
+        height:48px;
+        font-size:10px;
+        border-radius:11px;
+    }
+
+    #runButton{
+        width:72px;
+        height:55px;
+        right:10px;
+        bottom:10px;
+    }
+
+    #flashButton{
+        right:88px;
+        bottom:10px;
+    }
+
+    #interactButton{
+        right:88px;
+        bottom:67px;
+    }
+
+    #noteButton{
+        right:10px;
+        bottom:67px;
+    }
+
+    #soundButton{
+        right:10px;
+        bottom:125px;
+    }
+
+    #leftButton{
+        right:88px;
+        bottom:125px;
+        width:45px;
+    }
+
+    #rightButton{
+        right:39px;
+        bottom:125px;
+        width:45px;
+    }
+
+    #hud{
+        width:170px;
+        top:5px;
+        left:6px;
+    }
+
+}
+
+/* =========================
+   NOT
+========================= */
+
+#notePanel{
+    position:fixed;
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:min(88%,420px);
+
+    padding:25px;
+
+    background:#17130b;
+    border:1px solid #d0b456;
+
+    color:white;
+
+    z-index:1000;
+
+    display:none;
+}
+
+#notePanel h2{
+    color:#e0c25b;
+}
+
+#closeNote{
+    margin-top:20px;
+    padding:10px 20px;
+
+    background:#111;
+    color:white;
+
+    border:1px solid #777;
+}
+
+/* =========================
+   ÖLÜM
+========================= */
+
+#deathScreen{
+    position:fixed;
+    inset:0;
+    z-index:2000;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    background:#000;
+    color:#c33;
+}
+
+#restartButton{
+    padding:14px 30px;
+
+    background:#150000;
+    color:#f55;
+
+    border:1px solid #922;
+}
+
+/* =========================
+   JUMPSCARE
+========================= */
+
+#jumpscare{
+    position:fixed;
+    inset:0;
+    z-index:1900;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    background:#000;
+}
+
+.entityFace{
+    width:190px;
+    height:260px;
+
+    border-radius:50%;
+
+    background:#ddd;
+
+    position:relative;
+}
+
+.eye{
+    position:absolute;
+
+    top:80px;
+
+    width:35px;
+    height:55px;
+
+    background:#000;
+    border-radius:50%;
+}
+
+.eye1{
+    left:35px;
+}
+
+.eye2{
+    right:35px;
+}
+
+.mouth{
+    position:absolute;
+
+    left:50%;
+    bottom:45px;
+
+    transform:translateX(-50%);
+
+    width:90px;
+    height:22px;
+
+    background:#000;
+    border-radius:50%;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     BAŞLANGIÇ
+===================================================== -->
+
+<div id="startScreen">
+
+    <div class="startBox">
+
+        <h1>BACKROOMS</h1>
+
+        <p>
+            LEVEL 0<br>
+            Çıkışı bul.
+        </p>
+
+        <button id="startButton">
+            OYUNA BAŞLA
+        </button>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     TELEFON YATAY UYARISI
+===================================================== -->
+
+<div id="rotateScreen">
+
+    <div class="rotateBox">
+
+        <div class="rotateIcon">
+            📱↔️
+        </div>
+
+        <h2>
+            TELEFONU YATAY ÇEVİR
+        </h2>
+
+        <p>
+            Oyunu oynayabilmek için telefonu
+            yatay konuma getir.
+        </p>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     HUD
+===================================================== -->
+
+<div id="hud">
+
+    <div class="barName">
+        CAN
+    </div>
+
+    <div class="bar">
+        <div id="healthBar"
+             class="barFill"></div>
+    </div>
+
+    <div class="barName">
+        DAYANIKLILIK
+    </div>
+
+    <div class="bar">
+        <div id="staminaBar"
+             class="barFill"></div>
+    </div>
+
+    <div class="barName">
+        FENER
+    </div>
+
+    <div class="bar">
+        <div id="batteryBar"
+             class="barFill"></div>
+    </div>
+
+    <div id="levelText">
+        LEVEL 0
+    </div>
+
+</div>
+
+<div id="message"></div>
+
+<div id="crosshair"></div>
+
+<!-- =====================================================
+     MOBİL KONTROLLER
+===================================================== -->
+
+<div id="mobileControls">
+
+    <!-- SAĞ/ORTA KAMERA -->
+    <div id="cameraZone"></div>
+
+    <!-- JOYSTICK -->
+    <div id="joystick">
+
+        <div id="joystickRing"></div>
+
+        <div id="joystickKnob"></div>
+
+    </div>
+
+    <!-- KOŞ -->
+    <button id="runButton"
+            class="mobileButton">
+        🏃<br>
+        KOŞ
+    </button>
+
+    <!-- FENER -->
+    <button id="flashButton"
+            class="mobileButton">
+        🔦<br>
+        FENER
+    </button>
+
+    <!-- ETKİLEŞ -->
+    <button id="interactButton"
+            class="mobileButton">
+        ✋<br>
+        ETKİLEŞ
+    </button>
+
+    <!-- NOT -->
+    <button id="noteButton"
+            class="mobileButton">
+        📜<br>
+        NOT
+    </button>
+
+    <!-- SES -->
+    <button id="soundButton"
+            class="mobileButton">
+        🔊<br>
+        SES
+    </button>
+
+    <!-- KAMERA SOL -->
+    <button id="leftButton"
+            class="mobileButton">
+        ◀
+    </button>
+
+    <!-- KAMERA SAĞ -->
+    <button id="rightButton"
+            class="mobileButton">
+        ▶
+    </button>
+
+</div>
+
+<!-- =====================================================
+     NOT
+===================================================== -->
+
+<div id="notePanel">
+
+    <h2>
+        📜 NOT
+    </h2>
+
+    <div id="noteText"></div>
+
+    <button id="closeNote">
+        KAPAT
+    </button>
+
+</div>
+
+<!-- =====================================================
+     JUMPSCARE
+===================================================== -->
+
+<div id="jumpscare">
+
+    <div class="entityFace">
+
+        <div class="eye eye1"></div>
+
+        <div class="eye eye2"></div>
+
+        <div class="mouth"></div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     ÖLÜM
+===================================================== -->
+
+<div id="deathScreen">
+
+    <div>
+
+        <h1>
+            YAKALANDIN
+        </h1>
+
+        <button id="restartButton">
+            TEKRAR DENE
+        </button>
+
+    </div>
+
+</div>
+
+<script type="module">
+
+import * as THREE from
+"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+/* =====================================================
+   DEĞİŞKENLER
+===================================================== */
+
+let scene;
+let camera;
+let renderer;
+let clock;
+
+let gameStarted=false;
+
+let audioContext=null;
+
+let flashlight;
+
+let flashlightOn=false;
+
+let cameraYaw=0;
+let cameraPitch=0;
+
+let sensitivity=
+Number(localStorage.getItem(
+"cameraSensitivity"
+)) || 1;
+
+let health=100;
+let stamina=100;
+let battery=100;
+
+let level=0;
+
+let entity=null;
+
+let doors=[];
+
+let objects=[];
+
+let notes=[];
+
+let footstepTimer=null;
+let footstepMode=null;
+
+let scareActive=false;
+
+const keys={
+    w:false,
+    a:false,
+    s:false,
+    d:false,
+    shift:false
+};
+
+const joy={
+    x:0,
+    y:0
+};
+
+const player={
+    running:false,
+    key:false,
+    fuse:false
+};
+
+/* =====================================================
+   YARDIMCI
+===================================================== */
+
+function $(id){
+    return document.getElementById(id);
+}
+
+/* =====================================================
+   OYUNU BAŞLAT
+===================================================== */
+
+$("startButton").addEventListener(
+"click",
+async()=>{
+
+    $("startScreen").style.display="none";
+
+    gameStarted=true;
+
+    try{
+
+        if(
+            document.documentElement.requestFullscreen
+        ){
+
+            await document.documentElement
+            .requestFullscreen();
+
+        }
+
+    }catch(e){}
+
+    try{
+
+        if(
+            screen.orientation &&
+            screen.orientation.lock
+        ){
+
+            await screen.orientation.lock(
+                "landscape"
+            );
+
+        }
+
+    }catch(e){}
+
+    initAudio();
+
+    createGame();
+
+    setupKeyboard();
+
+    setupMobileControls();
+
+    checkMobileLayout();
+
+    buildLevel(0);
+
+    showMessage(
+        "LEVEL 0 — ANAHTARI BUL",
+        3000
+    );
+
+});
+
+/* =====================================================
+   SES
+===================================================== */
+
+function initAudio(){
+
+    if(audioContext) return;
+
+    audioContext=
+        new(
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
+}
+
+function tone(
+    frequency,
+    duration,
+    volume,
+    type="sine"
+){
+
+    if(!audioContext) return;
+
+    if(
+        audioContext.state==="suspended"
+    ){
+
+        audioContext.resume();
+
+    }
+
+    const osc=
+        audioContext.createOscillator();
+
+    const gain=
+        audioContext.createGain();
+
+    osc.type=type;
+
+    osc.frequency.value=frequency;
+
+    gain.gain.value=volume;
+
+    osc.connect(gain);
+
+    gain.connect(
+        audioContext.destination
+    );
+
+    osc.start();
+
+    gain.gain.exponentialRampToValueAtTime(
+        .001,
+        audioContext.currentTime+
+        duration
+    );
+
+    osc.stop(
+        audioContext.currentTime+
+        duration
+    );
+
+}
+
+/* =====================================================
+   OYUNU OLUŞTUR
+===================================================== */
+
+function createGame(){
+
+    scene=
+        new THREE.Scene();
+
+    scene.background=
+        new THREE.Color(
+            0x171208
+        );
+
+    scene.fog=
+        new THREE.Fog(
+            0x171208,
+            20,
+            70
+        );
+
+    camera=
+        new THREE.PerspectiveCamera(
+            75,
+            innerWidth/innerHeight,
+            .05,
+            200
+        );
+
+    camera.position.set(
+        0,
+        1.65,
+        8
+    );
+
+    renderer=
+        new THREE.WebGLRenderer({
+            antialias:true
+        });
+
+    renderer.setSize(
+        innerWidth,
+        innerHeight
+    );
+
+    renderer.setPixelRatio(
+        Math.min(
+            devicePixelRatio,
+            1.5
+        )
+    );
+
+    document.body.appendChild(
+        renderer.domElement
+    );
+
+    clock=
+        new THREE.Clock();
+
+    const ambient=
+        new THREE.AmbientLight(
+            0xffe6a3,
+            .3
+        );
+
+    scene.add(ambient);
+
+    const floor=
+        new THREE.Mesh(
+
+            new THREE.PlaneGeometry(
+                120,
+                120
+            ),
+
+            new THREE.MeshStandardMaterial({
+                color:0x4c421f
+            })
+
+        );
+
+    floor.rotation.x=
+        -Math.PI/2;
+
+    scene.add(floor);
+
+    flashlight=
+        new THREE.SpotLight(
+            0xffffdf,
+            0,
+            35,
+            Math.PI/8,
+            .55,
+            1
+        );
+
+    flashlight.position.set(
+        0,
+        1.55,
+        0
+    );
+
+    flashlight.target.position.set(
+        0,
+        1.5,
+        -10
+    );
+
+    camera.add(flashlight);
+
+    camera.add(
+        flashlight.target
+    );
+
+    scene.add(camera);
+
+    window.addEventListener(
+        "resize",
+        resize
+    );
+
+    animate();
+
+}
+
+/* =====================================================
+   MOBİL KONTROLLERİ GÖSTER/GİZLE
+===================================================== */
+
+function isTouchDevice(){
+
+    return(
+        navigator.maxTouchPoints>0 ||
+        "ontouchstart" in window
+    );
+
+}
+
+function checkMobileLayout(){
+
+    if(!gameStarted) return;
+
+    if(!isTouchDevice()){
+
+        $("mobileControls")
+        .style.display="none";
+
+        $("rotateScreen")
+        .style.display="none";
+
+        return;
+
+    }
+
+    const portrait=
+        innerHeight>innerWidth;
+
+    if(portrait){
+
+        $("mobileControls")
+        .style.display="none";
+
+        $("rotateScreen")
+        .style.display="flex";
+
+    }else{
+
+        $("rotateScreen")
+        .style.display="none";
+
+        $("mobileControls")
+        .style.display="block";
+
+    }
+
+}
+
+window.addEventListener(
+"resize",
+checkMobileLayout
+);
+
+window.addEventListener(
+"orientationchange",
+()=>{
+
+    setTimeout(
+        checkMobileLayout,
+        200
+    );
+
+});
+
+/* =====================================================
+   MOBİL JOYSTICK
+===================================================== */
+
+function setupMobileControls(){
+
+    /* ---------------------------------
+       JOYSTICK
+    --------------------------------- */
+
+    const joystick=
+        $("joystick");
+
+    const knob=
+        $("joystickKnob");
+
+    let pointerId=null;
+
+    function moveJoystick(e){
+
+        const rect=
+            joystick.getBoundingClientRect();
+
+        const centerX=
+            rect.left+
+            rect.width/2;
+
+        const centerY=
+            rect.top+
+            rect.height/2;
+
+        let dx=
+            e.clientX-centerX;
+
+        let dy=
+            e.clientY-centerY;
+
+        const max=
+            rect.width/2-33;
+
+        const distance=
+            Math.sqrt(
+                dx*dx+
+                dy*dy
+            );
+
+        if(distance>max){
+
+            dx=
+                dx/distance*max;
+
+            dy=
+                dy/distance*max;
+
+        }
+
+        joy.x=
+            dx/max;
+
+        /*
+           EKRANDA YUKARI
+           = OYUNCU İLERİ
+        */
+
+        joy.y=
+            -dy/max;
+
+        knob.style.transform=
+            `translate(${dx}px,${dy}px)`;
+
+    }
+
+    function resetJoystick(){
+
+        joy.x=0;
+        joy.y=0;
+
+        knob.style.transform=
+            "translate(0px,0px)";
+
+        pointerId=null;
+
+    }
+
+    joystick.addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            pointerId=
+                e.pointerId;
+
+            joystick.setPointerCapture(
+                e.pointerId
+            );
+
+            moveJoystick(e);
+
+        }
+    );
+
+    joystick.addEventListener(
+        "pointermove",
+        e=>{
+
+            if(
+                e.pointerId!==pointerId
+            ) return;
+
+            e.preventDefault();
+
+            moveJoystick(e);
+
+        }
+    );
+
+    joystick.addEventListener(
+        "pointerup",
+        e=>{
+
+            if(
+                e.pointerId!==pointerId
+            ) return;
+
+            resetJoystick();
+
+        }
+    );
+
+    joystick.addEventListener(
+        "pointercancel",
+        resetJoystick
+    );
+
+    /* ---------------------------------
+       KAMERA ALANI
+    --------------------------------- */
+
+    const cameraZone=
+        $("cameraZone");
+
+    let cameraPointer=null;
+
+    let lastX=0;
+    let lastY=0;
+
+    cameraZone.addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            cameraPointer=
+                e.pointerId;
+
+            lastX=
+                e.clientX;
+
+            lastY=
+                e.clientY;
+
+            cameraZone.setPointerCapture(
+                e.pointerId
+            );
+
+        }
+    );
+
+    cameraZone.addEventListener(
+        "pointermove",
+        e=>{
+
+            if(
+                e.pointerId!==cameraPointer
+            ) return;
+
+            e.preventDefault();
+
+            const dx=
+                e.clientX-lastX;
+
+            const dy=
+                e.clientY-lastY;
+
+            lastX=e.clientX;
+            lastY=e.clientY;
+
+            cameraYaw-=
+                dx*.008*sensitivity;
+
+            cameraPitch-=
+                dy*.008*sensitivity;
+
+            cameraPitch=
+                THREE.MathUtils.clamp(
+                    cameraPitch,
+                    -1.3,
+                    1.3
+                );
+
+        }
+    );
+
+    cameraZone.addEventListener(
+        "pointerup",
+        ()=>{
+
+            cameraPointer=null;
+
+        }
+    );
+
+    cameraZone.addEventListener(
+        "pointercancel",
+        ()=>{
+
+            cameraPointer=null;
+
+        }
+    );
+
+    /* ---------------------------------
+       KOŞMA
+    --------------------------------- */
+
+    const run=
+        $("runButton");
+
+    function runOn(e){
+
+        e.preventDefault();
+
+        player.running=true;
+
+    }
+
+    function runOff(e){
+
+        e.preventDefault();
+
+        player.running=false;
+
+    }
+
+    run.addEventListener(
+        "pointerdown",
+        runOn
+    );
+
+    run.addEventListener(
+        "pointerup",
+        runOff
+    );
+
+    run.addEventListener(
+        "pointercancel",
+        runOff
+    );
+
+    run.addEventListener(
+        "pointerleave",
+        runOff
+    );
+
+    /* ---------------------------------
+       FENER
+    --------------------------------- */
+
+    $("flashButton")
+    .addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            toggleFlashlight();
+
+        }
+    );
+
+    /* ---------------------------------
+       ETKİLEŞ
+    --------------------------------- */
+
+    $("interactButton")
+    .addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            interact();
+
+        }
+    );
+
+    /* ---------------------------------
+       NOT
+    --------------------------------- */
+
+    $("noteButton")
+    .addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            openNote();
+
+        }
+    );
+
+    /* ---------------------------------
+       SES
+    --------------------------------- */
+
+    $("soundButton")
+    .addEventListener(
+        "pointerdown",
+        e=>{
+
+            e.preventDefault();
+
+            initAudio();
+
+            tone(
+                600,
+                .1,
+                .08
+            );
+
+        }
+    );
+
+    /* ---------------------------------
+       KAMERA SOL
+    --------------------------------- */
+
+    setupCameraButton(
+        $("leftButton"),
+        -1
+    );
+
+    /* ---------------------------------
+       KAMERA SAĞ
+    --------------------------------- */
+
+    setupCameraButton(
+        $("rightButton"),
+        1
+    );
+
+}
+
+/* =====================================================
+   KAMERA BUTONLARI
+===================================================== */
+
+function setupCameraButton(
+    button,
+    direction
+){
+
+    let active=false;
+
+    function rotate(){
+
+        if(!active) return;
+
+        cameraYaw-=
+            direction*
+            .035*
+            sensitivity;
+
+        requestAnimationFrame(
+            rotate
+        );
+
+    }
+
+    function start(e){
+
+        e.preventDefault();
+
+        active=true;
+
+        rotate();
+
+    }
+
+    function stop(){
+
+        active=false;
+
+    }
+
+    button.addEventListener(
+        "pointerdown",
+        start
+    );
+
+    button.addEventListener(
+        "pointerup",
+        stop
+    );
+
+    button.addEventListener(
+        "pointercancel",
+        stop
+    );
+
+    button.addEventListener(
+        "pointerleave",
+        stop
+    );
+
+}
+
+/* =====================================================
+   PC KONTROLLERİ
+===================================================== */
+
+function setupKeyboard(){
+
+    window.addEventListener(
+        "keydown",
+        e=>{
+
+            if(e.code==="KeyW")
+                keys.w=true;
+
+            if(e.code==="KeyA")
+                keys.a=true;
+
+            if(e.code==="KeyS")
+                keys.s=true;
+
+            if(e.code==="KeyD")
+                keys.d=true;
+
+            if(
+                e.code==="ShiftLeft" ||
+                e.code==="ShiftRight"
+            )
+                keys.shift=true;
+
+            if(e.code==="KeyF")
+                toggleFlashlight();
+
+            if(e.code==="KeyE")
+                interact();
+
+            if(e.code==="KeyQ")
+                openNote();
+
+        }
+    );
+
+    window.addEventListener(
+        "keyup",
+        e=>{
+
+            if(e.code==="KeyW")
+                keys.w=false;
+
+            if(e.code==="KeyA")
+                keys.a=false;
+
+            if(e.code==="KeyS")
+                keys.s=false;
+
+            if(e.code==="KeyD")
+                keys.d=false;
+
+            if(
+                e.code==="ShiftLeft" ||
+                e.code==="ShiftRight"
+            )
+                keys.shift=false;
+
+        }
+    );
+
+    renderer.domElement.addEventListener(
+        "click",
+        ()=>{
+
+            if(
+                !isTouchDevice()
+            ){
+
+                renderer.domElement
+                .requestPointerLock?.();
+
+            }
+
+        }
+    );
+
+    document.addEventListener(
+        "mousemove",
+        e=>{
+
+            if(
+                document.pointerLockElement !==
+                renderer.domElement
+            ) return;
+
+            cameraYaw-=
+                e.movementX*
+                .0025*
+                sensitivity;
+
+            cameraPitch-=
+                e.movementY*
+                .0025*
+                sensitivity;
+
+            cameraPitch=
+                THREE.MathUtils.clamp(
+                    cameraPitch,
+                    -1.3,
+                    1.3
+                );
+
+        }
+    );
+
+}
+
+/* =====================================================
+   FENER
+===================================================== */
+
+function toggleFlashlight(){
+
+    if(battery<=0){
+
+        flashlightOn=false;
+
+        flashlight.intensity=0;
+
+        showMessage(
+            "🔋 FENERİN PİLİ BİTTİ — ŞARJ OLUYOR",
+            1500
+        );
+
+        return;
+
+    }
+
+    flashlightOn=
+        !flashlightOn;
+
+    flashlight.intensity=
+        flashlightOn ? 4:0;
+
+    tone(
+        flashlightOn ? 700:300,
+        .08,
+        .06,
+        "square"
+    );
+
+}
+
+/* =====================================================
+   YÜRÜME / KOŞMA SESİ
+===================================================== */
+
+function footsteps(running){
+
+    const mode=
+        running ?
+        "running":
+        "walking";
+
+    if(
+        footstepMode===mode
+    ) return;
+
+    stopFootsteps();
+
+    footstepMode=mode;
+
+    const interval=
+        running ? 240:430;
+
+    const frequency=
+        running ? 65:105;
+
+    const volume=
+        running ? .13:.065;
+
+    tone(
+        frequency,
+        .08,
+        volume,
+        "triangle"
+    );
+
+    footstepTimer=
+        setInterval(
+            ()=>{
+
+                tone(
+                    frequency,
+                    .08,
+                    volume,
+                    "triangle"
+                );
+
+            },
+            interval
+        );
+
+}
+
+function stopFootsteps(){
+
+    if(
+        footstepTimer!==null
+    ){
+
+        clearInterval(
+            footstepTimer
+        );
+
+        footstepTimer=null;
+
+    }
+
+    footstepMode=null;
+
+}
+
+/* =====================================================
+   OYUNCU HAREKETİ
+===================================================== */
+
+function updatePlayer(dt){
+
+    let forward=0;
+    let side=0;
+
+    /* PC */
+
+    if(keys.w)
+        forward+=1;
+
+    if(keys.s)
+        forward-=1;
+
+    if(keys.d)
+        side+=1;
+
+    if(keys.a)
+        side-=1;
+
+    /* MOBİL JOYSTICK */
+
+    forward+=joy.y;
+    side+=joy.x;
+
+    const moving=
+        Math.abs(forward)>.05 ||
+        Math.abs(side)>.05;
+
+    const wantsRun=
+        player.running ||
+        keys.shift;
+
+    const running=
+        wantsRun &&
+        moving &&
+        stamina>0;
+
+    if(running){
+
+        stamina-=dt*30;
+
+        if(stamina<0)
+            stamina=0;
+
+    }else{
+
+        stamina+=dt*18;
+
+        if(stamina>100)
+            stamina=100;
+
+    }
+
+    const speed=
+        running ?
+        6.2:
+        3.1;
+
+    if(moving){
+
+        const length=
+            Math.sqrt(
+                forward*forward+
+                side*side
+            );
+
+        if(length>1){
+
+            forward/=length;
+            side/=length;
+
+        }
+
+        /*
+           KAMERA YÖNÜNE GÖRE
+           HAREKET
+        */
+
+        const move=
+            new THREE.Vector3();
+
+        move.x=
+            -Math.sin(cameraYaw)*
+            forward+
+            Math.cos(cameraYaw)*
+            side;
+
+        move.z=
+            -Math.cos(cameraYaw)*
+            forward-
+            Math.sin(cameraYaw)*
+            side;
+
+        const oldX=
+            camera.position.x;
+
+        const oldZ=
+            camera.position.z;
+
+        camera.position.x+=
+            move.x*
+            speed*
+            dt;
+
+        camera.position.z+=
+            move.z*
+            speed*
+            dt;
+
+        if(collides()){
+
+            camera.position.x=
+                oldX;
+
+            camera.position.z=
+                oldZ;
+
+        }
+
+        footsteps(running);
+
+    }else{
+
+        stopFootsteps();
+
+    }
+
+    camera.position.y=1.65;
+
+    camera.rotation.order=
+        "YXZ";
+
+    camera.rotation.y=
+        cameraYaw;
+
+    camera.rotation.x=
+        cameraPitch;
+
+}
+
+/* =====================================================
+   ÇARPIŞMA
+===================================================== */
+
+function collides(){
+
+    const radius=.35;
+
+    for(
+        const object of objects
+    ){
+
+        if(
+            !object.userData.wall
+        )
+            continue;
+
+        const box=
+            new THREE.Box3()
+            .setFromObject(object);
+
+        if(
+
+            camera.position.x>
+                box.min.x-radius &&
+
+            camera.position.x<
+                box.max.x+radius &&
+
+            camera.position.z>
+                box.min.z-radius &&
+
+            camera.position.z<
+                box.max.z+radius
+
+        ){
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+/* =====================================================
+   DUVAR
+===================================================== */
+
+function createWall(
+    x,
+    z,
+    width,
+    depth
+){
+
+    const mesh=
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+                width,
+                3,
+                depth
+            ),
+
+            new THREE.MeshStandardMaterial({
+                color:0x6c602a
+            })
+
+        );
+
+    mesh.position.set(
+        x,
+        1.5,
+        z
+    );
+
+    mesh.userData.wall=true;
+
+    scene.add(mesh);
+
+    objects.push(mesh);
+
+    return mesh;
+
+}
+
+/* =====================================================
+   LEVEL 0
+===================================================== */
+
+function buildLevel(number){
+
+    level=number;
+
+    doors=[];
+    objects=[];
+    notes=[];
+    entity=null;
+
+    for(
+        const child of
+        [...scene.children]
+    ){
+
+        if(
+            child.userData &&
+            child.userData.levelObject
+        ){
+
+            scene.remove(child);
+
+        }
+
+    }
+
+    camera.position.set(
+        0,
+        1.65,
+        8
+    );
+
+    cameraYaw=0;
+    cameraPitch=0;
+
+    $("levelText").textContent=
+        "LEVEL "+number;
+
+    if(number===0)
+        level0();
+
+    if(number===1)
+        level1();
+
+    if(number===2)
+        level2();
+
+}
+
+/* =====================================================
+   LEVEL 0
+===================================================== */
+
+function level0(){
+
+    createWall(0,-20,40,1);
+    createWall(0,20,40,1);
+    createWall(-20,0,1,40);
+    createWall(20,0,1,40);
+
+    createWall(-8,-5,1,22);
+    createWall(8,5,1,22);
+    createWall(0,4,16,1);
+    createWall(-4,-12,10,1);
+
+    createDoor(
+        0,
+        -19.4
+    );
+
+    createPickup(
+        "key",
+        -10,
+        1,
+        -5
+    );
+
+    createNoteObject(
+        7,
+        1,
+        -8,
+        "Anahtarı bul. Çıkış kapısı güneyde."
+    );
+
+    createEntity(
+        12,
+        1.2,
+        -12
+    );
+
+}
+
+/* =====================================================
+   LEVEL 1
+===================================================== */
+
+function level1(){
+
+    createWall(0,-25,50,1);
+    createWall(0,25,50,1);
+    createWall(-25,0,1,50);
+    createWall(25,0,1,50);
+
+    createWall(-10,0,1,35);
+    createWall(8,-8,20,1);
+    createWall(0,8,16,1);
+
+    createDoor(
+        0,
+        -24.4
+    );
+
+    createPickup(
+        "fuse",
+        13,
+        1,
+        13
+    );
+
+    createNoteObject(
+        -5,
+        1,
+        14,
+        "Panel kodu: 0415"
+    );
+
+    createEntity(
+        -17,
+        1.2,
+        -16
+    );
+
+}
+
+/* =====================================================
+   LEVEL 2
+===================================================== */
+
+function level2(){
+
+    createWall(0,-30,60,1);
+    createWall(0,30,60,1);
+    createWall(-30,0,1,60);
+    createWall(30,0,1,60);
+
+    createWall(-12,-5,1,35);
+    createWall(12,5,1,35);
+
+    createDoor(
+        0,
+        -29.4
+    );
+
+    createNoteObject(
+        -20,
+        1,
+        -12,
+        "Son kapının kodu: 7392"
+    );
+
+    createPickup(
+        "medkit",
+        17,
+        1,
+        -17
+    );
+
+    createPickup(
+        "battery",
+        -17,
+        1,
+        15
+    );
+
+    createEntity(
+        18,
+        1.2,
+        15
+    );
+
+}
+
+/* =====================================================
+   KAPI
+===================================================== */
+
+function createDoor(
+    x,
+    z
+){
+
+    const group=
+        new THREE.Group();
+
+    group.position.set(
+        x,
+        0,
+        z
+    );
+
+    group.userData.levelObject=true;
+
+    const door=
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+                2.8,
+                3,
+                .25
+            ),
+
+            new THREE.MeshStandardMaterial({
+                color:0x22201a
+            })
+
+        );
+
+    door.position.set(
+        1.4,
+        1.5,
+        0
+    );
+
+    group.add(door);
+
+    scene.add(group);
+
+    doors.push({
+        group:group,
+        target:0
+    });
+
+}
+
+/* =====================================================
+   EŞYA
+===================================================== */
+
+function createPickup(
+    type,
+    x,
+    y,
+    z
+){
+
+    let geometry;
+    let material;
+
+    if(type==="key"){
+
+        geometry=
+            new THREE.TorusGeometry(
+                .18,
+                .05,
+                8,
+                20
+            );
+
+        material=
+            new THREE.MeshStandardMaterial({
+                color:0xffd43d
+            });
+
+    }
+
+    if(type==="fuse"){
+
+        geometry=
+            new THREE.BoxGeometry(
+                .3,
+                .6,
+                .3
+            );
+
+        material=
+            new THREE.MeshStandardMaterial({
+                color:0xdddddd
+            });
+
+    }
+
+    if(type==="medkit"){
+
+        geometry=
+            new THREE.BoxGeometry(
+                .7,
+                .3,
+                .5
+            );
+
+        material=
+            new THREE.MeshStandardMaterial({
+                color:0xdd3333
+            });
+
+    }
+
+    if(type==="battery"){
+
+        geometry=
+            new THREE.CylinderGeometry(
+                .15,
+                .15,
+                .5,
+                12
+            );
+
+        material=
+            new THREE.MeshStandardMaterial({
+                color:0xffff33
+            });
+
+    }
+
+    const mesh=
+        new THREE.Mesh(
+            geometry,
+            material
+        );
+
+    mesh.position.set(
+        x,
+        y,
+        z
+    );
+
+    mesh.userData.levelObject=true;
+
+    mesh.userData.pickup=type;
+
+    scene.add(mesh);
+
+    objects.push(mesh);
+
+}
+
+/* =====================================================
+   NOT
+===================================================== */
+
+function createNoteObject(
+    x,
+    y,
+    z,
+    text
+){
+
+    const mesh=
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+                .7,
+                .9,
+                .05
+            ),
+
+            new THREE.MeshStandardMaterial({
+                color:0xe3d39a
+            })
+
+        );
+
+    mesh.position.set(
+        x,
+        y,
+        z
+    );
+
+    mesh.userData.levelObject=true;
+
+    mesh.userData.note=text;
+
+    scene.add(mesh);
+
+    notes.push(mesh);
+
+}
+
+/* =====================================================
+   ENTITY
+===================================================== */
+
+function createEntity(
+    x,
+    y,
+    z
+){
+
+    const group=
+        new THREE.Group();
+
+    group.position.set(
+        x,
+        y,
+        z
+    );
+
+    group.userData.levelObject=true;
+
+    const body=
+        new THREE.Mesh(
+
+            new THREE.CylinderGeometry(
+                .55,
+                .75,
+                2.2,
+                12
+            ),
+
+            new THREE.MeshStandardMaterial({
+                color:0x111111
+            })
+
+        );
+
+    group.add(body);
+
+    const head=
+        new THREE.Mesh(
+
+            new THREE.SphereGeometry(
+                .48,
+                16,
+                16
+            ),
+
+            new THREE.MeshStandardMaterial({
+                color:0xd8d8d8
+            })
+
+        );
+
+    head.position.y=1.25;
+
+    group.add(head);
+
+    scene.add(group);
+
+    entity=group;
+
+}
+
+/* =====================================================
+   ETKİLEŞİM
+===================================================== */
+
+function interact(){
+
+    /* EŞYALAR */
+
+    for(
+        let i=objects.length-1;
+        i>=0;
+        i--
+    ){
+
+        const object=
+            objects[i];
+
+        if(!object.parent)
+            continue;
+
+        if(
+            !object.userData.pickup
+        )
+            continue;
+
+        const distance=
+            camera.position.distanceTo(
+                object.position
+            );
+
+        if(distance<2.5){
+
+            const type=
+                object.userData.pickup;
+
+            object.parent.remove(
+                object
+            );
+
+            if(type==="key"){
+
+                player.key=true;
+
+                showMessage(
+                    "🔑 ANAHTARI ALDIN",
+                    1800
+                );
+
+            }
+
+            if(type==="fuse"){
+
+                player.fuse=true;
+
+                showMessage(
+                    "⚡ SİGORTAYI ALDIN",
+                    1800
+                );
+
+            }
+
+            if(type==="medkit"){
+
+                health=
+                    Math.min(
+                        100,
+                        health+35
+                    );
+
+                showMessage(
+                    "❤️ CAN YENİLENDİ",
+                    1500
+                );
+
+            }
+
+            if(type==="battery"){
+
+                battery=
+                    Math.min(
+                        100,
+                        battery+40
+                    );
+
+                showMessage(
+                    "🔋 FENER PİLİ DOLDU",
+                    1500
+                );
+
+            }
+
+            tone(
+                700,
+                .12,
+                .08
+            );
+
+            return;
+
+        }
+
+    }
+
+    /* KAPI */
+
+    for(
+        const door of doors
+    ){
+
+        const position=
+            new THREE.Vector3();
+
+        door.group.getWorldPosition(
+            position
+        );
+
+        const distance=
+            camera.position.distanceTo(
+                position
+            );
+
+        if(distance<3){
+
+            if(
+                level===0 &&
+                !player.key
+            ){
+
+                showMessage(
+                    "🔒 ANAHTAR GEREKİYOR",
+                    1800
+                );
+
+                return;
+
+            }
+
+            if(
+                level===1 &&
+                !player.fuse
+            ){
+
+                showMessage(
+                    "⚡ SİGORTA GEREKİYOR",
+                    1800
+                );
+
+                return;
+
+            }
+
+            door.target=
+                door.target===0 ?
+                Math.PI/2:
+                0;
+
+            tone(
+                80,
+                .3,
+                .12,
+                "sawtooth"
+            );
+
+            return;
+
+        }
+
+    }
+
+}
+
+/* =====================================================
+   NOT AÇ
+===================================================== */
+
+function openNote(){
+
+    const panel=
+        $("notePanel");
+
+    if(
+        panel.style.display==="block"
+    ){
+
+        panel.style.display="none";
+
+        return;
+
+    }
+
+    let closest=null;
+    let closestDistance=Infinity;
+
+    for(
+        const note of notes
+    ){
+
+        const distance=
+            camera.position.distanceTo(
+                note.position
+            );
+
+        if(
+            distance<3 &&
+            distance<closestDistance
+        ){
+
+            closest=note;
+            closestDistance=distance;
+
+        }
+
+    }
+
+    if(!closest){
+
+        showMessage(
+            "📜 YAKINDA NOT YOK",
+            1200
+        );
+
+        return;
+
+    }
+
+    $("noteText").textContent=
+        closest.userData.note;
+
+    panel.style.display="block";
+
+}
+
+$("closeNote").addEventListener(
+"click",
+()=>{
+
+    $("notePanel").style.display=
+        "none";
+
+});
+
+/* =====================================================
+   KAPI ANİMASYONU
+===================================================== */
+
+function updateDoors(){
+
+    for(
+        const door of doors
+    ){
+
+        door.group.rotation.y+=
+            (
+                door.target-
+                door.group.rotation.y
+            )*.12;
+
+    }
+
+}
+
+/* =====================================================
+   ENTITY
+===================================================== */
+
+function updateEntity(dt){
+
+    if(!entity)
+        return;
+
+    const direction=
+        new THREE.Vector3();
+
+    direction.subVectors(
+        camera.position,
+        entity.position
+    );
+
+    direction.y=0;
+
+    const distance=
+        direction.length();
+
+    if(distance<15){
+
+        direction.normalize();
+
+        entity.rotation.y=
+            Math.atan2(
+                direction.x,
+                direction.z
+            );
+
+        if(distance>2){
+
+            entity.position.x+=
+                direction.x*
+                dt*
+                1.3;
+
+            entity.position.z+=
+                direction.z*
+                dt*
+                1.3;
+
+        }
+
+        if(distance<1.5){
+
+            jumpscare();
+
+        }
+
+    }
+
+}
+
+/* =====================================================
+   JUMPSCARE
+===================================================== */
+
+function jumpscare(){
+
+    if(scareActive)
+        return;
+
+    scareActive=true;
+
+    tone(
+        45,
+        .8,
+        .3,
+        "sawtooth"
+    );
+
+    $("jumpscare").style.display=
+        "flex";
+
+    setTimeout(
+        ()=>{
+
+            $("jumpscare").style.display=
+                "none";
+
+            health=0;
+
+            die();
+
+        },
+        800
+    );
+
+}
+
+/* =====================================================
+   ÖLÜM
+===================================================== */
+
+function die(){
+
+    stopFootsteps();
+
+    $("deathScreen").style.display=
+        "flex";
+
+}
+
+$("restartButton").addEventListener(
+"click",
+()=>{
+
+    $("deathScreen").style.display=
+        "none";
+
+    health=100;
+    stamina=100;
+    battery=100;
+
+    player.key=false;
+    player.fuse=false;
+    player.running=false;
+
+    scareActive=false;
+
+    buildLevel(level);
+
+});
+
+/* =====================================================
+   PİL
+===================================================== */
+
+function updateBattery(dt){
+
+    if(flashlightOn){
+
+        /* Fener açıkken pil azalır */
+        battery-=dt*3;
+
+        if(battery<=0){
+
+            battery=0;
+
+            flashlightOn=false;
+
+            flashlight.intensity=0;
+
+            showMessage(
+                "🔋 FENERİN PİLİ BİTTİ — ŞARJ OLUYOR",
+                1800
+            );
+
+        }
+
+    }else{
+
+        /* Fener kapalıyken pil zamanla otomatik dolar.
+           Tam doluma yaklaşık 25 saniyede ulaşır. */
+        battery+=dt*4;
+
+        if(battery>100)
+            battery=100;
+
+    }
+
+}
+
+/* =====================================================
+   ÇIKIŞ
+===================================================== */
+
+function checkExit(){
+
+    if(
+        camera.position.z<-18
+    ){
+
+        if(
+            level===0 &&
+            player.key
+        ){
+
+            buildLevel(1);
+
+            showMessage(
+                "LEVEL 1",
+                2500
+            );
+
+        }
+
+        else if(
+            level===1 &&
+            player.fuse
+        ){
+
+            buildLevel(2);
+
+            showMessage(
+                "LEVEL 2",
+                2500
+            );
+
+        }
+
+    }
+
+}
+
+/* =====================================================
+   HUD
+===================================================== */
+
+function updateHUD(){
+
+    $("healthBar")
+        .style.width=
+        health+"%";
+
+    $("staminaBar")
+        .style.width=
+        stamina+"%";
+
+    $("batteryBar")
+        .style.width=
+        battery+"%";
+
+}
+
+/* =====================================================
+   MESAJ
+===================================================== */
+
+let messageTimeout=null;
+
+function showMessage(
+    text,
+    duration=2000
+){
+
+    $("message").textContent=text;
+
+    clearTimeout(
+        messageTimeout
+    );
+
+    messageTimeout=
+        setTimeout(
+            ()=>{
+
+                $("message").textContent="";
+
+            },
+            duration
+        );
+
+}
+
+/* =====================================================
+   RESIZE
+===================================================== */
+
+function resize(){
+
+    if(!camera || !renderer)
+        return;
+
+    camera.aspect=
+        innerWidth/innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+        innerWidth,
+        innerHeight
+    );
+
+}
+
+/* =====================================================
+   OYUN DÖNGÜSÜ
+===================================================== */
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+    if(
+        !gameStarted ||
+        !renderer ||
+        !camera
+    )
+        return;
+
+    const dt=
+        Math.min(
+            clock.getDelta(),
+            .05
+        );
+
+    updatePlayer(dt);
+
+    updateDoors();
+
+    updateEntity(dt);
+
+    updateBattery(dt);
+
+    updateHUD();
+
+    checkExit();
+
+    if(health<=0)
+        die();
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
+
+</script>
+
+</body>
+</html>
